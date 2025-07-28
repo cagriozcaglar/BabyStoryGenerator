@@ -17,25 +17,33 @@ export interface StoryContent {
 class GeminiService {
   private genAI: GoogleGenerativeAI | null = null;
   private model: any = null;
+  private apiKey: string | null = null;
 
   constructor() {
     this.initializeGemini();
   }
 
   private initializeGemini() {
-    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+    // Try to get API key from environment variables first, then sessionStorage
+    this.apiKey = import.meta.env.VITE_GEMINI_API_KEY || 
+                  (typeof window !== 'undefined' ? sessionStorage.getItem('GEMINI_API_KEY') : null);
     
-    if (!apiKey) {
+    if (!this.apiKey) {
       console.warn('Gemini API key not found. Please add VITE_GEMINI_API_KEY to your environment variables.');
       return;
     }
 
     try {
-      this.genAI = new GoogleGenerativeAI(apiKey);
+      this.genAI = new GoogleGenerativeAI(this.apiKey);
       this.model = this.genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     } catch (error) {
       console.error('Failed to initialize Gemini:', error);
     }
+  }
+
+  setApiKey(apiKey: string) {
+    this.apiKey = apiKey;
+    this.initializeGemini();
   }
 
   async generateStory(params: StoryParams): Promise<StoryContent> {

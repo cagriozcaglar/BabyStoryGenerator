@@ -31,6 +31,24 @@ A beautiful, personalized story generator for babies and toddlers powered by Goo
    npm run dev
    ```
 
+## GitHub Pages Deployment
+
+When deployed to GitHub Pages, the app will prompt you for your Gemini API key on first use. The key is stored securely in your browser's session storage and is never sent to any server other than Google's Gemini API.
+
+### Deploy to GitHub Pages:
+
+1. **Build the project:**
+   ```bash
+   npm run build
+   ```
+
+2. **Deploy the `dist` folder to GitHub Pages**
+
+3. **Set the correct base path** in `vite.config.ts`:
+   ```typescript
+   base: '/your-repository-name/',
+   ```
+
 ## Environment Variables
 
 Create a `.env` file in the root directory with:

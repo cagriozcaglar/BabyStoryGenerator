@@ -48,7 +48,19 @@ const StoryForm: React.FC<StoryFormProps> = ({ onGenerateStory, isGenerating }) 
     e.preventDefault();
     
     if (!geminiService.isConfigured()) {
-      alert('Gemini API is not configured. Please add your VITE_GEMINI_API_KEY to the environment variables.');
+      const apiKey = prompt('Please enter your Gemini API key (get it from https://makersuite.google.com/app/apikey):');
+      if (apiKey) {
+        // Store in sessionStorage for this session
+        sessionStorage.setItem('GEMINI_API_KEY', apiKey);
+        // Reinitialize the service
+        geminiService.setApiKey(apiKey);
+      } else {
+        alert('Gemini API key is required to generate stories.');
+        return;
+      }
+    }
+    
+    if (!geminiService.isConfigured()) {
       return;
     }
     
